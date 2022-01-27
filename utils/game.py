@@ -94,6 +94,7 @@ class Hangman:
         :param self.correctly_guessed_letter:
         """
 
+        self.FindtoWord()
         self.CreateLetter()
         self.StartingAnimation()
 

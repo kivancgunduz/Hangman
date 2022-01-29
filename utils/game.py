@@ -12,22 +12,18 @@ from typing import Counter, List, Union
 
 class Hangman:
     
-    def __init__(self) -> None:
-        pass
-
     possible_words: List[str] = ['becode', 'learning', 'mathematics', 'sessions']
-    word_to_find: List[str] = []
-    correctly_guessed_letters: str = ""
-    wrongly_guessed_letters: str = ""
-    turn_count: int = 0
-    error_count: int = 0
-    life: int = 5
-    well_guessed_letter: List[str] = []
-    bad_guessed_letter: List[str] = []
 
+    def __init__(self):
+        self.life: int = 5
+        self.turn_count: int = 0
+        self.error_count: int = 0
+        self.word_to_find: List[str] = []
+        self.well_guessed_letter: List[str] = []
+        self.bad_guessed_letter: List[str] = []
+        self.correctly_guessed_letters: str = ""
 
-
-    def FindtoWord(self):
+    def findtoWord(self):
         """
         The function that will choice word from possible_words list,randomly. And it converts to letter list as a word_to_find.
         :param self => possible_words: it will be used for choosing word, randomly.
@@ -35,21 +31,17 @@ class Hangman:
         """
         selected_word = random.choice(self.possible_words)
         self.word_to_find = list(selected_word)
-        
-        return self.word_to_find
 
-    def CreateLetter(self):
+    def createLetter(self):
         """
         The function that will hide the word's letter as a "_" and upload to correctly_guessed_letter
         :param self => word_to_find: it will be used for calculating range in choosed word.
         :return: A list that has hidden letter as a "_". 
         """
-        for i in range(len(self.word_to_find)):
+        for _ in range(len(self.word_to_find)):
             self.correctly_guessed_letters += "_"
-        
-        return self.correctly_guessed_letters
 
-    def Play(self):
+    def play(self):
         """
         The function that it will ask the outside user for letter. It will check if this letter is in the list we created as "word_to_find". 
         It will call TrueMove() if the letter is present in the list, WrongMove() if false. 
@@ -70,23 +62,20 @@ class Hangman:
         # check the move. if it's true move,call TrueMove func. if it's not true, call WrongMove
         if converted_value in self.word_to_find:
             # call true move func
-            self.TrueMove(converted_value)
+            self.trueMove(converted_value)
         else:
             #call wrong move func
-            self.WrongMove(converted_value)
+            self.wrongMove(converted_value)
 
         # increase round number by 1
         self.turn_count += 1 
 
         # print current situation
-        print(f"{self.well_guessed_letter} is your well guess /n")
-        print(f"{self.bad_guessed_letter} is your bad guess /n")
-        print(f"{self.life} is your current life. You done {self.turn_count}. You made {self.error_count} ")
+        print(f"{self.well_guessed_letter} is your well guess")
+        print(f"{self.bad_guessed_letter} is your bad guess.")
+        print(f"{self.life} is your current life. You done {self.turn_count}. You made {self.error_count} wrong guess.")
 
-        
-
-    
-    def StartGame(self):
+    def startGame(self):
         """
         The function that will follow the general flow of the game. 
         By checking the life value in each cycle, it will continue or end the game if the necessary condition is met.  
@@ -94,35 +83,31 @@ class Hangman:
         :param self.correctly_guessed_letter:
         """
 
-        self.FindtoWord()
-        self.CreateLetter()
-        self.StartingAnimation()
+        self.findtoWord()
+        self.createLetter()
+        self.startingAnimation()
 
         while True:
-            if self.life > 0:                                           # check game over. if it is not, call play func
-                if "_" in self.correctly_guessed_letters:               # check if there are still missing letters
-                    self.Play()
+            if self.life > 0:                             
+                if "_" in self.correctly_guessed_letters:   
+                    self.play()
                 else:
-                    self.WellPlayed()                                   # if it's all guessed correctly, call WellPlayed() func
+                    self.wellPlayed()                       
                     break
             elif self.life == 0:
-                self.GameOver()
+                self.gameOver()
                 break
 
-
-
-    def GameOver(self):
+    def gameOver(self) -> bool:
         """
         The function is called when that user's life is over. A message is sent to the user that the game is over.
         : param self:
         : return: A boolean that it's true, if program called this function. 
         """
         print("Game is Over")
-        isOver = True
+        return True
 
-        return isOver
-
-    def WellPlayed(self):
+    def wellPlayed(self):
         """
         The function is called when all letters are guessed correctly, which successfully sends the game over message.
         Shares parameters with the user.
@@ -130,29 +115,25 @@ class Hangman:
         : param self.turn_count: used for reach number of round
         : param self.error_count: used for how many mistakes to made
         """
-        print("You win /n")
+        print("You win")
         print(f"You found the word: {self.word_to_find} in {self.turn_count} turns with {self.error_count} errors!")
 
-
-    
-    def WrongMove(self, letter):
+    def wrongMove(self, letter):
         """
         The function is called when that user makes a wrong guess. Decreases the user's health by one. And increments the error value by one.
         : param self.life: When user make a wrong quess, reducing life value by 1. 
         : param self.error_count:  When user make a wrong quess, increase error_count value by 1.  
         """
         print("Upps... Not correct")
-
         # Add guessed letter to bad_guessed_letter
         self.bad_guessed_letter.append(letter)
-
         # reduce lives by 1
         if self.life != 0:
             self.life -= 1
         
         self.error_count += 1
 
-    def TrueMove(self, letter):
+    def trueMove(self, letter):
         """
         The function is called when that user guesses correctly. It notifies the user that the correct guess has been made. 
         It takes the guessed letter as a parameter and adds it to the list of correctly guessed letters.
@@ -164,7 +145,7 @@ class Hangman:
         self.well_guessed_letter.append(letter)
 
         # Find location for well quessed letter
-        locations = self.FindLetterLocation(letter)
+        locations = self.findLetterLocation(letter)
 
         # Change _ to Well Letter 
         list_letter = list(self.correctly_guessed_letters)
@@ -173,12 +154,11 @@ class Hangman:
         
         self.correctly_guessed_letters = ''.join(list_letter)
             
-
         # Print correctly_guessed_letter
         print(f"{self.correctly_guessed_letters}")
 
-    
-    def StartingAnimation(self):
+    @staticmethod
+    def startingAnimation():
         """
         The function two is called as animation at the start of the game. 
         It counts down from 3 and sends the user the message that the game has started.
@@ -194,7 +174,7 @@ class Hangman:
         return ""
 
 
-    def FindLetterLocation(self,well_letter):
+    def findLetterLocation(self,well_letter):
         """
         The function searches for the letter it takes as a parameter in which index the searched word is in. 
         If there is parameters one or more in word_to_find, it returns the list of indexes.
